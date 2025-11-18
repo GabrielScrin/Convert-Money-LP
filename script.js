@@ -133,26 +133,6 @@ const handleSubmit = (event) => {
   updateConversion();
 };
 
-/**
- * Atualiza a conversão em tempo real toda vez que o usuário altera o valor em reais.
- *
- * @returns {void} Não retorna valor; serve apenas para manter o resultado sincronizado com o input.
- */
-const handleAmountInput = () => {
-  updateConversion();
-};
-
-/**
- * Dispara a conversão ao trocar a moeda alvo na lista.
- *
- * @returns {void} Não retorna valor; apenas recalcula quando o usuário muda a moeda alvo.
- */
-const handleTargetChange = () => {
-  updateConversion();
-};
-
 form.addEventListener("submit", handleSubmit);
-amountInput.addEventListener("input", handleAmountInput);
-targetSelect.addEventListener("change", handleTargetChange);
 
 updateConversion();
