@@ -21,6 +21,24 @@ Nenhuma dependência externa é necessária. Basta um navegador moderno com supo
 2. Abra o arquivo `index.html` diretamente no navegador (duplo clique ou arraste para uma aba).
 3. Digite um valor em reais, escolha a moeda de destino e clique em **Converter** para visualizar o resultado e as prévias nas demais moedas.
 
+## Qualidade de código
+
+Os comandos abaixo ajudam a validar padrões e boas práticas. Execute antes um `npm install` para instalar o ESLint e o Prettier declarados em `package.json`.
+
+```bash
+# verifica problemas de estilo e possíveis bugs
+npm run lint
+
+# corrige automaticamente o que for possível
+npm run lint:fix
+
+# verifica formatação consistente
+npm run format:check
+
+# aplica a formatação definida
+npm run format
+```
+
 ## Personalização
 
 - Ajuste as taxas de conversão no objeto `rates` em `script.js`. Cada entrada contém:

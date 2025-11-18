@@ -1,0 +1,16 @@
+{
+  "name": "conversor-siberpunk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page cyberpunk para conversão de BRL em USD/EUR/BTC.",
+  "scripts": {
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" --ignore-path .eslintignore",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "eslint": "^9.11.1",
+    "prettier": "^3.2.5"
+  }
+}
