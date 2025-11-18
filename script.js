@@ -52,6 +52,13 @@ const targetCode = document.querySelector("#target-code");
 const targetFlagImg = document.querySelector("#target-flag-img");
 const rateCards = document.querySelector("#rate-cards");
 
+/**
+ * Formata o valor convertido respeitando a moeda alvo definida.
+ *
+ * @param {{ currency: string, locale: string, symbol: string }} info Objeto com metadados da moeda selecionada.
+ * @param {number} value Valor digitado em reais pelo usuário.
+ * @returns {string} Valor já convertido, formatado segundo a localidade da moeda destino.
+ */
 const formatTarget = (info, value) => {
   if (info.currency === "BTC") {
     return `${info.symbol} ${value.toFixed(5)}`;
@@ -63,6 +70,12 @@ const formatTarget = (info, value) => {
   }).format(value);
 };
 
+/**
+ * Atualiza o painel lateral com os cartões de taxa para cada moeda configurada.
+ *
+ * @param {number} baseValue Valor atual informado em reais para gerar as prévias de conversão.
+ * @returns {void} Não retorna valor; apenas redesenha os cartões de prévia.
+ */
 const buildCards = (baseValue) => {
   rateCards.innerHTML = "";
 
@@ -84,6 +97,11 @@ const buildCards = (baseValue) => {
   });
 };
 
+/**
+ * Calcula a conversão selecionada no formulário e reflete o resultado na interface.
+ *
+ * @returns {void} Não retorna valor; atualiza os elementos do resultado com as informações calculadas.
+ */
 const updateConversion = () => {
   const targetKey = targetSelect.value;
   const info = rates[targetKey];
@@ -104,17 +122,37 @@ const updateConversion = () => {
   buildCards(value);
 };
 
-form.addEventListener("submit", (event) => {
+/**
+ * Trata o envio do formulário, impedindo o recarregamento da página e disparando o cálculo.
+ *
+ * @param {SubmitEvent} event Evento disparado pelo envio do formulário.
+ * @returns {void} Não retorna valor; previne o envio padrão e chama o cálculo.
+ */
+const handleSubmit = (event) => {
   event.preventDefault();
   updateConversion();
-});
+};
 
-amountInput.addEventListener("input", () => {
+/**
+ * Atualiza a conversão em tempo real toda vez que o usuário altera o valor em reais.
+ *
+ * @returns {void} Não retorna valor; serve apenas para manter o resultado sincronizado com o input.
+ */
+const handleAmountInput = () => {
   updateConversion();
-});
+};
 
-targetSelect.addEventListener("change", () => {
+/**
+ * Dispara a conversão ao trocar a moeda alvo na lista.
+ *
+ * @returns {void} Não retorna valor; apenas recalcula quando o usuário muda a moeda alvo.
+ */
+const handleTargetChange = () => {
   updateConversion();
-});
+};
+
+form.addEventListener("submit", handleSubmit);
+amountInput.addEventListener("input", handleAmountInput);
+targetSelect.addEventListener("change", handleTargetChange);
 
 updateConversion();
