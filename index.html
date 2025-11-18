@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversor SiberPunk</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header class="hero">
+      <div class="badge">Conversor SiberPunk</div>
+      <h1 class="glitch" data-text="Converter Real para o Futuro">
+        Converter Real para o Futuro
+      </h1>
+      <p>
+        Converta rapidamente de Real brasileiro para Dólar, Euro ou Bitcoin com
+        um visual inspirado nas noites neon de Neo-SP.
+      </p>
+    </header>
+
+    <main class="grid">
+      <section class="card converter">
+        <h2>Escolha o destino</h2>
+        <form id="converter-form">
+          <label for="from">
+            Converter de
+            <input id="from" type="text" value="R$ Real brasileiro" disabled />
+          </label>
+
+          <label for="target">
+            Converter para
+            <select id="target" required>
+              <option value="usd">US$ Dólar americano</option>
+              <option value="eur">€ Euro</option>
+              <option value="btc">₿ Bitcoin</option>
+            </select>
+          </label>
+
+          <label for="amount">
+            Valor
+            <input
+              id="amount"
+              type="number"
+              min="1"
+              step="0.01"
+              value="1000"
+              required
+            />
+          </label>
+
+          <button type="submit">Converter</button>
+        </form>
+
+        <div class="result" id="result">
+          <article class="result-block">
+            <div class="flag-badge">
+              <span class="flag-circle">
+                <img
+                  src="assets/brasil 2.png"
+                  alt="Bandeira do Brasil"
+                  class="flag-img"
+                />
+              </span>
+              <span class="code">BR</span>
+            </div>
+            <p>Real</p>
+            <strong id="result-brl">R$ 1.000,00</strong>
+          </article>
+
+          <div class="result-arrow" aria-hidden="true">
+            <span class="arrow-dot"></span>
+            <span class="arrow-dot"></span>
+            <span class="arrow-dot"></span>
+            <span class="arrow-head">↓</span>
+          </div>
+
+          <article class="result-block">
+            <div class="flag-badge">
+              <span class="flag-circle">
+                <img
+                  src="assets/estados-unidos.png"
+                  alt="Bandeira dos Estados Unidos"
+                  class="flag-img"
+                  id="target-flag-img"
+                />
+              </span>
+              <span class="code" id="target-code">US</span>
+            </div>
+            <p id="result-label">Dólar Americano</p>
+            <strong id="result-target">US$ 200,00</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="card rates">
+        <h2>Painel Neon</h2>
+        <p class="caption">
+          Atualizamos os valores automaticamente quando você altera o campo.
+        </p>
+        <div class="rate-cards" id="rate-cards">
+          <!-- Populado via JavaScript -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Valores demonstrativos baseados em taxas médias. Inspire-se e ajuste os
+        números conforme o cenário desejado.
+      </p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
