@@ -10,12 +10,13 @@
     <div class="scanlines" aria-hidden="true"></div>
     <header class="hero">
       <div class="badge">Conversor SiberPunk</div>
-      <h1 class="glitch" data-text="Converter Real para o Futuro">
-        Converter Real para o Futuro
+      <h1 class="glitch" data-text="Converter Moedas no Futuro">
+        Converter Moedas no Futuro
       </h1>
       <p>
-        Converta rapidamente de Real brasileiro para Dólar, Euro ou Bitcoin com
-        um visual inspirado nas noites neon de Neo-SP.
+        Escolha a moeda de origem e destino para converter rapidamente entre
+        Real, Dólar, Euro ou Bitcoin com um visual inspirado nas noites neon de
+        Neo-SP.
       </p>
     </header>
 
@@ -23,15 +24,21 @@
       <section class="card converter">
         <h2>Escolha o destino</h2>
         <form id="converter-form">
-          <label for="from">
+          <label for="source">
             Converter de
-            <input id="from" type="text" value="R$ Real brasileiro" disabled />
+            <select id="source" required>
+              <option value="brl">R$ Real brasileiro</option>
+              <option value="usd">US$ Dólar americano</option>
+              <option value="eur">€ Euro</option>
+              <option value="btc">₿ Bitcoin</option>
+            </select>
           </label>
 
           <label for="target">
             Converter para
             <select id="target" required>
-              <option value="usd">US$ Dólar americano</option>
+              <option value="brl">R$ Real brasileiro</option>
+              <option value="usd" selected>US$ Dólar americano</option>
               <option value="eur">€ Euro</option>
               <option value="btc">₿ Bitcoin</option>
             </select>
@@ -60,12 +67,13 @@
                   src="assets/brasil 2.png"
                   alt="Bandeira do Brasil"
                   class="flag-img"
+                  id="source-flag-img"
                 />
               </span>
-              <span class="code">BR</span>
+              <span class="code" id="source-code">BR</span>
             </div>
-            <p>Real</p>
-            <strong id="result-brl">R$ 1.000,00</strong>
+            <p id="source-label">Real</p>
+            <strong id="result-source">R$ 1.000,00</strong>
           </article>
 
           <div class="result-arrow" aria-hidden="true">
