@@ -67,6 +67,13 @@ const resultTarget = document.querySelector("#result-target");
 const targetCode = document.querySelector("#target-code");
 const targetFlagImg = document.querySelector("#target-flag-img");
 const rateCards = document.querySelector("#rate-cards");
+const quoteGrid = document.querySelector("#quote-grid");
+const quoteUpdated = document.querySelector("#quote-updated");
+const quoteStatus = document.querySelector("#quote-status");
+
+const QUOTE_ENDPOINT =
+  "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL";
+const quoteKeys = ["usd", "eur", "btc"];
 
 /**
  * Formata o valor convertido respeitando a moeda alvo definida.
@@ -84,6 +91,69 @@ const formatTarget = (info, value) => {
     style: "currency",
     currency: info.currency,
   }).format(value);
+};
+
+/**
+ * Normaliza a data recebida da API para exibir o carimbo de atualiza��o.
+ *
+ * @param {string | undefined} timestamp Data retornada pela API (ex.: "2024-03-20 15:00:00").
+ * @returns {string} Texto pronto para apare��er na interface.
+ */
+const formatUpdateLabel = (timestamp) => {
+  if (!timestamp || typeof timestamp !== "string") {
+    return "";
+  }
+
+  if (timestamp.includes(" ")) {
+    const [datePart, timePart] = timestamp.split(" ");
+    const [year, month, day] = datePart.split("-").map(Number);
+
+    if (year && month && day && timePart) {
+      return `Atualizado em ${String(day).padStart(2, "0")}/${String(
+        month
+      ).padStart(2, "0")}/${year} ${timePart}`;
+    }
+  }
+
+  const parsed = Date.parse(timestamp);
+  if (!Number.isNaN(parsed)) {
+    const date = new Date(parsed);
+    return `Atualizado em ${date.toLocaleDateString(
+      "pt-BR"
+    )} ${date.toLocaleTimeString("pt-BR")}`;
+  }
+
+  return `Atualizado: ${timestamp}`;
+};
+
+/**
+ * Exibe a sess�o de "cota��o do dia" com as taxas atuais em BRL.
+ *
+ * @returns {void}
+ */
+const renderDailyQuote = () => {
+  if (!quoteGrid) {
+    return;
+  }
+
+  quoteGrid.innerHTML = "";
+
+  quoteKeys.forEach((key) => {
+    const info = rates[key];
+    if (!info) {
+      return;
+    }
+
+    const chip = document.createElement("div");
+    chip.className = "quote-chip";
+    chip.style.setProperty("--accent", info.accent);
+    chip.innerHTML = `
+      <span>${info.label}</span>
+      <strong>1 ${info.symbol} = ${brlFormatter.format(info.brl)}</strong>
+    `;
+
+    quoteGrid.appendChild(chip);
+  });
 };
 
 /**
@@ -161,9 +231,76 @@ const handleSubmit = (event) => {
   updateConversion();
 };
 
+/**
+ * Busca a cota��o do dia e atualiza as taxas usadas na convers�o.
+ *
+ * @returns {Promise<void>}
+ */
+const loadDailyRates = async () => {
+  if (quoteUpdated) {
+    quoteUpdated.textContent = "Buscando cota��o do dia...";
+  }
+
+  if (quoteStatus) {
+    quoteStatus.textContent = "";
+  }
+
+  renderDailyQuote();
+
+  try {
+    const response = await fetch(QUOTE_ENDPOINT);
+    if (!response.ok) {
+      throw new Error("Resposta invǭlida da API");
+    }
+
+    const data = await response.json();
+    const incoming = {
+      usd: Number(data?.USDBRL?.ask),
+      eur: Number(data?.EURBRL?.ask),
+      btc: Number(data?.BTCBRL?.ask),
+    };
+
+    const lastUpdate =
+      data?.USDBRL?.create_date ||
+      data?.EURBRL?.create_date ||
+      data?.BTCBRL?.create_date;
+
+    let applied = false;
+
+    Object.entries(incoming).forEach(([key, value]) => {
+      if (Number.isFinite(value) && value > 0 && rates[key]) {
+        rates[key].brl = value;
+        applied = true;
+      }
+    });
+
+    if (quoteUpdated) {
+      quoteUpdated.textContent =
+        formatUpdateLabel(lastUpdate) || "Cota��o do dia carregada";
+    }
+
+    renderDailyQuote();
+
+    if (applied) {
+      updateConversion();
+    }
+  } catch (error) {
+    if (quoteUpdated) {
+      quoteUpdated.textContent = "Usando valores de refer��ncia";
+    }
+
+    if (quoteStatus) {
+      quoteStatus.textContent =
+        "Falha ao carregar a cota��o do dia. Mantivemos os valores de refer��ncia.";
+    }
+  }
+};
+
 form.addEventListener("submit", handleSubmit);
 amountInput.addEventListener("input", updateConversion);
 sourceSelect.addEventListener("change", updateConversion);
 targetSelect.addEventListener("change", updateConversion);
 
 updateConversion();
+renderDailyQuote();
+loadDailyRates();
